@@ -1,0 +1,13 @@
+https://raw.githubusercontent.com/Trisert/Wallpaper/master/07263emcloq41.jpg
+https://raw.githubusercontent.com/Trisert/Wallpaper/master/0e9ischu92151.jpg
+https://raw.githubusercontent.com/Trisert/dotfiles/master/.xmonad/xmonad.hs
+
+downdn: 
+real    7m49.103s
+user    0m3.598s
+sys     0m6.157s
+
+wget:
+real    6m4.638s
+user    0m1.240s
+sys     0m3.231s
