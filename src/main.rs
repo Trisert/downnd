@@ -1,6 +1,6 @@
 pub mod argom;
 use crate::argom::Args;
-use downnd::*;
+use downnd::prelude::*;
 
 use anyhow::Result;
 use clap::Parser;
