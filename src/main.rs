@@ -5,8 +5,6 @@ use downnd::prelude::*;
 use anyhow::Result;
 use clap::Parser;
 use futures::stream::StreamExt;
-use std::io::Cursor;
-use tokio::io::copy;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -15,21 +13,16 @@ async fn main() -> Result<()> {
     if let Some(url) = args.url.as_deref() {
         let response = reqwest::get(url).await?;
 
-        let mut dest = create_file(&response).await?;
-
-        let mut content = Cursor::new(response.bytes().await?);
-        copy(&mut content, &mut dest).await?;
+        download(response).await?;
     }
 
     if let Some(path) = args.path.as_deref() {
         let path = read_line(path)?;
         let fetches = futures::stream::iter(path.into_iter().map(|path| async move {
             match reqwest::get(&path).await {
-                Ok(resp) => {
-                    let mut dest = create_file(&resp).await.unwrap();
-                    let mut content = Cursor::new(resp.bytes().await.unwrap());
-                    copy(&mut content, &mut dest).await.unwrap();
-                }
+                Ok(response) => {
+                    download(response).await.unwrap()
+                },
                 Err(_) => println!("Error in {}", path),
             }
         }))
