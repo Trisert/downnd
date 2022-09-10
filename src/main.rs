@@ -21,8 +21,8 @@ async fn main() -> Result<()> {
         let fetches = futures::stream::iter(path.into_iter().map(|path| async move {
             match reqwest::get(&path).await {
                 Ok(response) => {
-                    download(response).await.unwrap()
-                },
+                    download(response).await.unwrap();
+                }
                 Err(_) => println!("Error in {}", path),
             }
         }))
@@ -31,6 +31,5 @@ async fn main() -> Result<()> {
 
         fetches.await;
     }
-
     Ok(())
 }

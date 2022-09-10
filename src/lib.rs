@@ -1,18 +1,11 @@
 pub mod prelude {
     use anyhow::Result;
+    use futures::stream::StreamExt;
+    use indicatif::{ProgressBar, ProgressStyle};
     use reqwest::Response;
     use std::path::Path;
-    use tokio::{
-        fs::File,
-        io::copy
-    };
-    use indicatif::{ProgressBar, ProgressStyle};
-    use futures::stream::StreamExt;
-    use std::{
-        cmp::min, 
-        io::Cursor,
-        io::BufRead
-    };
+    use std::{cmp::min, io::BufRead, io::Cursor};
+    use tokio::{fs::File, io::copy};
 
     pub async fn create_file(resp: &Response) -> Result<File> {
         let file = {
@@ -44,7 +37,7 @@ pub mod prelude {
     }
 
     pub async fn download(response: Response) -> Result<()> {
-        let total_size = response.content_length().unwrap();
+        let total_size = response.content_length().unwrap_or(0);
 
         let pb = ProgressBar::new(total_size);
         pb.set_style(ProgressStyle::default_bar()
@@ -66,6 +59,7 @@ pub mod prelude {
             pb.set_position(new);
         }
 
+        pb.finish_and_clear();
         Ok(())
     }
 }
